@@ -1,0 +1,4 @@
+.card { margin-bottom: 20px; }
+.ok { color: #166534; font-size: 14px; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+       padding: 12px 0; border-top: 1px solid var(--border); }

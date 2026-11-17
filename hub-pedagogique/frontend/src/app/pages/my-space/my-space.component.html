@@ -1,0 +1,76 @@
+<h1>Mon espace</h1>
+
+@if (!user.pseudo()) {
+  <div class="card">
+    <h2>👋 Qui êtes-vous ?</h2>
+    <p class="muted">Choisissez un pseudo pour publier et gérer vos ressources (stocké dans votre navigateur).</p>
+    <form (ngSubmit)="savePseudo()">
+      <input type="text" [formControl]="pseudoCtrl" placeholder="Ex : sarra_dev" />
+      @if (pseudoCtrl.touched && pseudoCtrl.invalid) {
+        <div class="error">Pseudo requis (2 à 40 caractères).</div>
+      }
+      <p><button class="btn" type="submit">Continuer</button></p>
+    </form>
+  </div>
+} @else {
+  <p>Connecté en tant que <strong>{{ user.pseudo() }}</strong>
+    — <a href="javascript:void(0)" (click)="logout()">changer</a></p>
+
+  <div class="card">
+    <h2>➕ Publier une ressource</h2>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label for="title">Titre</label>
+      <input id="title" type="text" formControlName="title" />
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <div class="error">Titre requis (3 à 100 caractères).</div>
+      }
+
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+      @if (form.controls.description.touched && form.controls.description.invalid) {
+        <div class="error">Description requise (10 à 1000 caractères).</div>
+      }
+
+      <label for="category">Catégorie</label>
+      <select id="category" formControlName="category">
+        <option value="COURS">Cours</option>
+        <option value="TP">TP</option>
+        <option value="PROJET">Projet</option>
+      </select>
+
+      <label for="file">Fichier (max 10 Mo)</label>
+      <input #fileInput id="file" type="file" (change)="onFileChange($event)" />
+      @if (form.controls.file.touched && form.controls.file.hasError('required')) {
+        <div class="error">Veuillez choisir un fichier.</div>
+      }
+      @if (form.controls.file.hasError('maxSize')) {
+        <div class="error">Le fichier dépasse 10 Mo.</div>
+      }
+
+      <p>
+        <button class="btn" type="submit" [disabled]="uploading()">
+          {{ uploading() ? 'Envoi en cours…' : 'Publier' }}
+        </button>
+      </p>
+      @if (message(); as m) {
+        <div [class]="m.type === 'ok' ? 'ok' : 'error'">{{ m.text }}</div>
+      }
+    </form>
+  </div>
+
+  <div class="card list">
+    <h2>📂 Mes publications ({{ mine().length }})</h2>
+    @for (r of mine(); track r.id) {
+      <div class="row">
+        <div>
+          <span class="badge" [class]="'badge ' + r.category">{{ r.category }}</span>
+          <a [routerLink]="['/resource', r.id]"><strong> {{ r.title }}</strong></a>
+          <div class="muted">{{ r.fileName }} · {{ r.fileSize | fileSize }} · {{ r.createdAt | date: 'dd/MM/yyyy' }}</div>
+        </div>
+        <button class="btn danger" type="button" (click)="remove(r)">🗑 Supprimer</button>
+      </div>
+    } @empty {
+      <p class="muted">Vous n'avez encore rien publié.</p>
+    }
+  </div>
+}

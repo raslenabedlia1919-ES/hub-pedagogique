@@ -1,0 +1,61 @@
+<a routerLink="/" class="back">← Retour au catalogue</a>
+
+@if (notFound()) {
+  <div class="card">Cette ressource n'existe pas (ou a été supprimée).</div>
+}
+
+@if (resource(); as r) {
+  <div class="card">
+    <span class="badge" [class]="'badge ' + r.category">{{ r.category }}</span>
+    <h1>{{ r.title }}</h1>
+    <p class="muted">Par <strong>{{ r.author }}</strong> · {{ r.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+    <p class="description">{{ r.description }}</p>
+
+    <div class="file">
+      <div>
+        📎 <strong>{{ r.fileName }}</strong>
+        <span class="muted"> ({{ r.fileSize | fileSize }})</span>
+      </div>
+      <div class="actions">
+        <a class="btn" [href]="downloadUrl">⬇ Télécharger</a>
+        @if (previewable) {
+          <a class="btn secondary" [href]="previewUrl" target="_blank" rel="noopener">👁 Aperçu</a>
+        }
+      </div>
+    </div>
+
+    @if (isImage) {
+      <img class="preview" [src]="previewUrl" [alt]="r.title" />
+    }
+  </div>
+
+  <div class="card comments">
+    <h2>💬 Commentaires ({{ comments().length }})</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label for="author">Pseudo</label>
+      <input id="author" type="text" formControlName="author" />
+      @if (form.controls.author.touched && form.controls.author.invalid) {
+        <div class="error">Pseudo requis (2 à 40 caractères).</div>
+      }
+
+      <label for="content">Votre commentaire</label>
+      <textarea id="content" formControlName="content" placeholder="Merci pour ce partage !"></textarea>
+      @if (form.controls.content.touched && form.controls.content.invalid) {
+        <div class="error">Commentaire requis (2 à 500 caractères).</div>
+      }
+
+      <p><button class="btn" type="submit" [disabled]="sending()">Publier</button></p>
+    </form>
+
+    @for (c of comments(); track c.id) {
+      <div class="comment">
+        <strong>{{ c.author }}</strong>
+        <span class="muted"> · {{ c.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <p>{{ c.content }}</p>
+      </div>
+    } @empty {
+      <p class="muted">Soyez le premier à commenter.</p>
+    }
+  </div>
+}

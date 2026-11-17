@@ -1,0 +1,7 @@
+.res { display: flex; flex-direction: column; color: inherit; transition: transform .15s, box-shadow .15s; }
+.res:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.12); }
+.res h3 { margin: 10px 0 6px; }
+.desc { flex: 1; margin: 0 0 12px; color: #4b5563; display: -webkit-box; -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical; overflow: hidden; }
+.meta { display: flex; justify-content: space-between; gap: 8px; }
+.empty { text-align: center; color: var(--muted); }

@@ -1,0 +1,9 @@
+.back { display: inline-block; margin-bottom: 12px; }
+.card { margin-bottom: 20px; }
+.description { white-space: pre-line; line-height: 1.6; }
+.file { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+        background: #f9fafb; border: 1px dashed var(--border); border-radius: 10px; padding: 14px; margin-top: 16px; }
+.actions { display: flex; gap: 8px; }
+.preview { max-width: 100%; border-radius: 10px; margin-top: 16px; }
+.comment { border-top: 1px solid var(--border); padding: 12px 0 0; margin-top: 12px; }
+.comment p { margin: 6px 0 0; white-space: pre-line; }

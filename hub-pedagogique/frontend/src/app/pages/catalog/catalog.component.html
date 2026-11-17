@@ -1,0 +1,38 @@
+<h1>Catalogue des ressources</h1>
+
+<input type="text" [formControl]="search" placeholder="🔍 Rechercher un titre, un mot-clé, un auteur…" />
+
+<div class="chips">
+  @for (c of categories; track c.value) {
+    <button type="button" class="chip" [class.active]="activeCategory() === c.value" (click)="setCategory(c.value)">
+      {{ c.label }}
+    </button>
+  }
+</div>
+
+@if (loading()) {
+  <p class="muted">Chargement…</p>
+}
+@if (error()) {
+  <p class="error">Impossible de joindre le serveur. Le backend est-il démarré sur le port 8080 ?</p>
+}
+
+@if (!loading() && !error() && items().length === 0) {
+  <div class="card empty">
+    Aucune ressource trouvée. <a routerLink="/mon-espace">Publiez la première !</a>
+  </div>
+}
+
+<div class="grid">
+  @for (r of items(); track r.id) {
+    <a class="card res" [routerLink]="['/resource', r.id]">
+      <span class="badge" [class]="'badge ' + r.category">{{ r.category }}</span>
+      <h3>{{ r.title }}</h3>
+      <p class="desc">{{ r.description }}</p>
+      <div class="meta muted">
+        <span>👤 {{ r.author }}</span>
+        <span>{{ r.createdAt | date: 'dd/MM/yyyy' }} · {{ r.fileSize | fileSize }}</span>
+      </div>
+    </a>
+  }
+</div>
